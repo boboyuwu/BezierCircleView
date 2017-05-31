@@ -202,51 +202,22 @@ public class BezierCirlcieView extends View {
     }
 
     //set the offset value (0~1)
-    public void setHorizontalOffset(int offset){
+    private float offsetLast;
+    public void setHorizontalOffset(float offset){
         offset=offset>=1?1:offset;
         offset=offset<=0?0:offset;
-    }
-
-    //set the four direction point
-    public void setHorizontalTopLine(HorizontalLine horizontalLine) {
-        mHorizontalTopLine = horizontalLine;
+        float offsetValue = mRadius * offset;
+        float offsetValueLast=mRadius*offsetLast;
+        Point top = mVerticalRightLine.getTop();
+        Point middle = mVerticalRightLine.getMiddle();
+        Point bottom = mVerticalRightLine.getBottom();
+        top.setxCoordinate(top.getxCoordinate()+(offsetValue-offsetValueLast));
+        middle.setxCoordinate(middle.getxCoordinate()+(offsetValue-offsetValueLast));
+        bottom.setxCoordinate(bottom.getxCoordinate()+(offsetValue-offsetValueLast));
         refreshView();
+        offsetLast=offset;
     }
 
-
-    public void setHorizontalBottomLine(HorizontalLine horizontalLine) {
-        mHorizontalBottomLine = horizontalLine;
-        refreshView();
-    }
-
-
-    public void setVerticalLeftLine(VerticalLine verticalLine) {
-        mVerticalLeftLine = verticalLine;
-        refreshView();
-    }
-
-
-    public void setVerticalRightLine(VerticalLine verticalLine) {
-        mVerticalRightLine = verticalLine;
-        refreshView();
-    }
-
-    //get the point
-    public HorizontalLine getHorizontalTopLine() {
-        return mHorizontalTopLine;
-    }
-
-    public HorizontalLine getHorizontalBottomLine() {
-        return mHorizontalBottomLine;
-    }
-
-    public VerticalLine getVerticalLeftLine() {
-        return mVerticalLeftLine;
-    }
-
-    public VerticalLine getVerticalRightLine() {
-        return mVerticalRightLine;
-    }
 
     private void refreshView() {
         invalidate();

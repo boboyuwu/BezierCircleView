@@ -1,7 +1,9 @@
 package com.boboyuwu.beziercirlcle;
 
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,24 +21,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()){
-            case MotionEvent.ACTION_DOWN:
-                mStartX = event.getX();
-                return true;
-            case MotionEvent.ACTION_MOVE:
-                float moveX = event.getX();
-                float diffX = moveX - mStartX;
-                BezierCirlcieView.VerticalLine verticalRightLine = mBezier.getVerticalRightLine();
-                BezierCirlcieView.Point top = verticalRightLine.getTop();
-                BezierCirlcieView.Point middle = verticalRightLine.getMiddle();
-                BezierCirlcieView.Point bottom = verticalRightLine.getBottom();
-                top.setxCoordinate(top.getxCoordinate()+diffX);
-                middle.setxCoordinate(middle.getxCoordinate()+diffX);
-                bottom.setxCoordinate(bottom.getxCoordinate()+diffX);
-                mBezier.setVerticalRightLine(verticalRightLine);
-                mStartX=moveX;
-                return true;
-        }
-        return false;
+        ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f,1f);
+        valueAnimator.setDuration(1000);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value= (float) animation.getAnimatedValue();
+                Log.e("wwww",value+"  value");
+                mBezier.setHorizontalOffset(value);
+            }
+        });
+        valueAnimator.start();
+        return true;
     }
 }
