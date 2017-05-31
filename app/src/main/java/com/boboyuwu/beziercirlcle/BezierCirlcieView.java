@@ -207,15 +207,20 @@ public class BezierCirlcieView extends View {
         offset=offset>=1?1:offset;
         offset=offset<=0?0:offset;
         float offsetValue = mRadius * offset;
-        float offsetValueLast=mRadius*offsetLast;
-        Point top = mVerticalRightLine.getTop();
-        Point middle = mVerticalRightLine.getMiddle();
-        Point bottom = mVerticalRightLine.getBottom();
-        top.setxCoordinate(top.getxCoordinate()+(offsetValue-offsetValueLast));
-        middle.setxCoordinate(middle.getxCoordinate()+(offsetValue-offsetValueLast));
-        bottom.setxCoordinate(bottom.getxCoordinate()+(offsetValue-offsetValueLast));
-        refreshView();
-        offsetLast=offset;
+
+        //这里来个阀值 （0~0.6 准备离开框框    0.6～0.8 平衡状态   0.8 ~1 ）
+        if(offset>0&&offset<0.6){
+            float offsetValueLast=mRadius*offsetLast;
+            Point top = mVerticalRightLine.getTop();
+            Point middle = mVerticalRightLine.getMiddle();
+            Point bottom = mVerticalRightLine.getBottom();
+            top.setxCoordinate(top.getxCoordinate()+(offsetValue-offsetValueLast));
+            middle.setxCoordinate(middle.getxCoordinate()+(offsetValue-offsetValueLast));
+            bottom.setxCoordinate(bottom.getxCoordinate()+(offsetValue-offsetValueLast));
+            refreshView();
+            offsetLast=offset;
+        }
+
     }
 
 
