@@ -22,12 +22,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         ValueAnimator valueAnimator = ValueAnimator.ofFloat(0f,1f);
-        valueAnimator.setDuration(1000);
+        valueAnimator.setDuration(10000);
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value= (float) animation.getAnimatedValue();
-                Log.e("wwww",value+"  value");
                 mBezier.setHorizontalOffset(value);
             }
         });

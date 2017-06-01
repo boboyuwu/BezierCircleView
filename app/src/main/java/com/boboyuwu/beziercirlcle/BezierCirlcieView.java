@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -202,25 +203,51 @@ public class BezierCirlcieView extends View {
     }
 
     //set the offset value (0~1)
-    private float offsetLast;
+    //定义一些阀值
+    private final float thresholdL=0.5f;
+    private final float thresholdM=0.8f;
+    private final float thresholdR=0.9f;
     public void setHorizontalOffset(float offset){
         offset=offset>=1?1:offset;
         offset=offset<=0?0:offset;
         float offsetValue = mRadius * offset;
 
         //这里来个阀值 （0~0.6 准备离开框框    0.6～0.8 平衡状态   0.8 ~1 ）
-        if(offset>0&&offset<0.6){
-            float offsetValueLast=mRadius*offsetLast;
-            Point top = mVerticalRightLine.getTop();
-            Point middle = mVerticalRightLine.getMiddle();
-            Point bottom = mVerticalRightLine.getBottom();
-            top.setxCoordinate(top.getxCoordinate()+(offsetValue-offsetValueLast));
-            middle.setxCoordinate(middle.getxCoordinate()+(offsetValue-offsetValueLast));
-            bottom.setxCoordinate(bottom.getxCoordinate()+(offsetValue-offsetValueLast));
-            refreshView();
-            offsetLast=offset;
-        }
+        Point topL = mVerticalRightLine.getTop();
+        Point middleL = mVerticalRightLine.getMiddle();
+        Point bottomL = mVerticalRightLine.getBottom();
 
+        Point left = mHorizontalTopLine.getLeft();
+        Point middle = mHorizontalTopLine.getMiddle();
+        Point right = mHorizontalTopLine.getRight();
+
+        if(offsetValue>0&&offsetValue<thresholdL){
+            float diffRate = getDiffRate(0, thresholdL, offsetValue);
+            float rightDiffX= mRadius+mRadius * diffRate;
+            topL.setxCoordinate(rightDiffX);
+            middleL.setxCoordinate(rightDiffX);
+            bottomL.setxCoordinate(rightDiffX);
+            refreshView();
+        }else if(offsetValue>=thresholdL&&offsetValue<thresholdM){
+            float diffRate = getDiffRate(thresholdL, thresholdM, offsetValue);
+            float rightDiffX= mRadius+(mRadius-mRadius * diffRate*0.5f);
+            Log.e("wwwwwwww",rightDiffX+"");
+            topL.setxCoordinate(rightDiffX);
+            middleL.setxCoordinate(rightDiffX);
+            bottomL.setxCoordinate(rightDiffX);
+
+            left.setxCoordinate(rightDiffX);
+            middle.setxCoordinate(rightDiffX);
+            right.setxCoordinate(rightDiffX);
+            refreshView();
+        }else if(offsetValue>=thresholdM){
+
+        }
+    }
+
+    //value2 must greater than value1
+    public float getDiffRate(float value1,float value2,float offset){
+        return (offset-value1)/(value2-value1);
     }
 
 
